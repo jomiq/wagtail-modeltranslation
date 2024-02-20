@@ -61,7 +61,7 @@ def translation_settings():
         languages=", ".join(lang_codes),
         language_names=" ,".join(lang_names),
         language_code=mt_settings.DEFAULT_LANGUAGE,
-        view_edit_string=_('View / edit fields for'),
+        view_edit_string=_('Languages: '),
         translate_slugs='true' if wmt_settings.TRANSLATE_SLUGS else 'false',
         locale_picker_default=locale_picker_default,
         locale_picker_restore='true' if wmt_settings.LOCALE_PICKER_RESTORE else 'false',
