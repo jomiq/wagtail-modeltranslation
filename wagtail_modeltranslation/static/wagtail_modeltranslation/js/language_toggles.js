@@ -45,15 +45,19 @@ function filterForLocale(index, element) {
   // not already been added.
   var bin = localisedElements[locale];
   if (bin.indexOf(element) === -1) {
-    bin.push(element);
-    element.classList.add(`l10n-hidden`);
+    // Hack: add this class to prevent hiding a panel, ever.
+    if( !element.classList.contains("never-hide") ){
 
-    // also note that "field-col" elements may now look horribly
-    // wrong, due to how Wagtail computes which of "col3"..."col12"
-    // to use. Because wagtail-modeltranslation introduces many more
-    // elements to show in an "inline" element, things that were
-    // "col6" before end up being "col1", looking terribly wrong indeed.
-    element.classList.remove(...columnCSS);
+      bin.push(element);
+      element.classList.add(`l10n-hidden`);
+      
+      // also note that "field-col" elements may now look horribly
+      // wrong, due to how Wagtail computes which of "col3"..."col12"
+      // to use. Because wagtail-modeltranslation introduces many more
+      // elements to show in an "inline" element, things that were
+      // "col6" before end up being "col1", looking terribly wrong indeed.
+      element.classList.remove(...columnCSS);
+    }
   }
 }
 
@@ -108,7 +112,7 @@ function buildLocaleToggler() {
   for (let index = 0; index < wagtailModelTranslations.languages.length; index++) {
     const locale = wagtailModelTranslations.languages[index];
     const name = wagtailModelTranslations.language_names[index];
-    var li = $(`<li class="locale"><button type="button" class="locale-toggle">${name}</button></li>`);
+    var li = $(`<li class="locale"><button type="button" class="locale-toggle" alt="[${locale}]">${name}</button></li>`);
     ul.append(li);
 
     $(`button.locale-toggle`, li).each( (index, toggle) => {
