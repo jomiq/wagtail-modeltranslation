@@ -34,8 +34,11 @@ else:
 @hooks.register('insert_editor_js')
 def translation_settings():
     lang_codes = []
+    lang_names = []
     for lang in settings.LANGUAGES:
         lang_codes.append("'%s'" % lang[0])
+        lang_names.append("'%s'" % lang[1])
+    
 
     if wmt_settings.LOCALE_PICKER_DEFAULT is not None:
         locale_picker_default = ", ".join(f"'{v}'" for v in wmt_settings.LOCALE_PICKER_DEFAULT)
@@ -46,6 +49,7 @@ def translation_settings():
     <script>
         wagtailModelTranslations = {{
             languages: [{languages}],
+            language_names: [{language_names}],
             defaultLanguage: '{language_code}',
             viewEditString: '{view_edit_string}',
             translate_slugs: {translate_slugs},
@@ -55,6 +59,7 @@ def translation_settings():
     </script>
     """.format(
         languages=", ".join(lang_codes),
+        language_names=" ,".join(lang_names),
         language_code=mt_settings.DEFAULT_LANGUAGE,
         view_edit_string=_('View / edit fields for'),
         translate_slugs='true' if wmt_settings.TRANSLATE_SLUGS else 'false',

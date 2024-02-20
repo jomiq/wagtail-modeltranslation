@@ -105,8 +105,10 @@ function buildLocaleToggler() {
   bar.append(ul);
 
   var toggles = {};
-  wagtailModelTranslations.languages.forEach( locale => {
-    var li = $(`<li class="locale"><button type="button" class="locale-toggle">${locale}</button></li>`);
+  for (let index = 0; index < wagtailModelTranslations.languages.length; index++) {
+    const locale = wagtailModelTranslations.languages[index];
+    const name = wagtailModelTranslations.language_names[index];
+    var li = $(`<li class="locale"><button type="button" class="locale-toggle">${name}</button></li>`);
     ul.append(li);
 
     $(`button.locale-toggle`, li).each( (index, toggle) => {
@@ -118,7 +120,7 @@ function buildLocaleToggler() {
 
       toggles[locale] = toggle;
     });
-  });
+  }
 
   bar.prependTo(topLevel);
 
