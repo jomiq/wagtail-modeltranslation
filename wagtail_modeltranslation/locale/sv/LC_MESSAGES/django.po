@@ -1,0 +1,121 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-20 14:06-0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: wagtail_modeltranslation/patch_wagtailadmin.py:375
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:160
+msgid "This slug is already in use"
+msgstr "Denna slug används redan"
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:30
+msgid "New title"
+msgstr "Ny titel"
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:42
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:49
+msgid "New slug"
+msgstr "Ny slug"
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:55
+msgid "New parent page"
+msgstr "Ny föräldrasida"
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:56
+msgid "This copy will be a child of this given parent page."
+msgstr "Kopian kommer att skapas under denna sida"
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:62
+msgid "Copy subpages"
+msgstr "Kopiera undersidor"
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:64
+#, python-format
+msgid "This will copy %(count)s subpage."
+msgid_plural "This will copy %(count)s subpages."
+msgstr[0] "Detta kommer att kopiera %(count)s undersida."
+msgstr[1] "Detta kommer att kopiera %(count)s undersidor."
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:73
+msgid "Publish copied page"
+msgstr "Publicera kopia av sida"
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:74
+msgid "This page is live. Would you like to publish its copy as well?"
+msgstr "Denna sida är publicerad, vill du även publicera kopian?"
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:76
+msgid "Publish copies"
+msgstr "Publicera kopior"
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:78
+#, python-format
+msgid ""
+"%(count)s of the pages being copied is live. Would you like to publish its "
+"copy?"
+msgid_plural ""
+"%(count)s of the pages being copied are live. Would you like to publish "
+"their copies?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:99
+#, python-format
+msgid "You do not have permission to copy to page \"%(page_title)s\""
+msgstr ""
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:116
+#, python-format
+msgid ""
+"This slug is already in use within the context of its parent page \"%s\""
+msgstr ""
+
+#: wagtail_modeltranslation/patch_wagtailadmin_forms.py:126
+msgid "You cannot copy a page into itself when copying subpages"
+msgstr ""
+
+#: wagtail_modeltranslation/templates/modeltranslation_copy.html:3
+#, python-format
+msgid "Copy %(title)s"
+msgstr ""
+
+#: wagtail_modeltranslation/templates/modeltranslation_copy.html:5
+msgid "Copy"
+msgstr ""
+
+#: wagtail_modeltranslation/templates/modeltranslation_copy.html:21
+msgid "Copy this page"
+msgstr ""
+
+#: wagtail_modeltranslation/tests/apps.py:9
+msgid "Wagtail tests"
+msgstr ""
+
+#: wagtail_modeltranslation/wagtail_hooks.py:64
+msgid "Languages: "
+msgstr "Språk:"
+
+#: wagtail_modeltranslation/wagtail_hooks.py:268
+#, python-brace-format
+msgid "Page '{0}' and {1} subpages copied."
+msgstr ""
+
+#: wagtail_modeltranslation/wagtail_hooks.py:272
+#, python-brace-format
+msgid "Page '{0}' copied."
+msgstr ""
