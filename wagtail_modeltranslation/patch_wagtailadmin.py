@@ -209,14 +209,15 @@ class WagtailTranslator(object):
                     localized_panel = panel_class(
                         localized_field_name,
                         targets=original_panel.targets,
-                        apply_if_live=original_panel.apply_if_live)
+                        apply_if_live=original_panel.apply_if_live,
+                        attrs={"lang":language})
                 else:
                     # Slugs are not translated and this title field is in a non-default language.
                     # There is no slug to link the title to, so the TitleFieldPanel becomes a
                     # plain FieldPanel.
-                    localized_panel = FieldPanel(localized_field_name, classname="title")
+                    localized_panel = FieldPanel(localized_field_name, classname="title", attrs={"lang":language})
             else:
-                localized_panel = panel_class(localized_field_name)
+                localized_panel = panel_class(localized_field_name, attrs={"lang":language})
 
             # Pass the original panel extra attributes to the localized
             if hasattr(original_panel, 'classname'):
