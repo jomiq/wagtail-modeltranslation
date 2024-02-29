@@ -4,7 +4,8 @@ jQuery( () => {
 
 const tabbedContent = $(`form .tab-content`);
 const topLevel = (tabbedContent.length > 0) ? tabbedContent.first() : $(`.content > form`);
-const languageCodeRegex = new RegExp(' \\[('+wagtailModelTranslations.languages.join('|')+')\\]');
+// Oh dear lord 
+const languageCodeRegex = new RegExp(' \\[('+wagtailModelTranslations.languages.join("|") + "|" + wagtailModelTranslations.language_names.join("|") +')\\]');
 
 if (topLevel.length === 0) {
   // obviously, if we don't have an element to attach
