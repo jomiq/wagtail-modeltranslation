@@ -5,8 +5,10 @@ from django import template
 from django.urls import resolve
 from django.urls.exceptions import Resolver404
 from django.utils.translation import activate, get_language
+from django.utils.safestring import SafeString
 from modeltranslation import settings as mt_settings
 from modeltranslation.settings import DEFAULT_LANGUAGE
+from modeltranslation.utils import build_localized_verbose_name
 from six import iteritems
 from wagtail.models import Page
 from wagtail.templatetags.wagtailcore_tags import pageurl
@@ -113,6 +115,6 @@ def do_get_available_languages(unused_parser, token):
 def lang_toggles():
     res = '<ul>'
     for lang in mt_settings.AVAILABLE_LANGUAGES:
-        res += f"<li>{lang}</li>"
+        res += f"<li>{build_localized_verbose_name('', lang)}</li>"
 
-    return res
+    return SafeString(res)
