@@ -108,3 +108,11 @@ def do_get_available_languages(unused_parser, token):
             "'get_available_languages_wmt' requires 'as variable' "
             "(got %r)" % args)
     return GetAvailableLanguagesNode(args[2])
+
+@register.simple_tag(takes_context=False)
+def lang_toggles():
+    res = '<ul>'
+    for lang in mt_settings.AVAILABLE_LANGUAGES:
+        res += f"<li>{lang}</li>"
+
+    return res
