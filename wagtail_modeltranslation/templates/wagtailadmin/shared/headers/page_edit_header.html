@@ -1,6 +1,6 @@
 {% extends 'wagtailadmin/shared/headers/page_edit_header.html' %}
 {% load wagtail_modeltranslation %}
-{% block actions %}
+{% block toggles %}
+    {% lang_toggle_editor %} 
     {{ block.super }}
-    {% lang_toggles %}
 {% endblock %}

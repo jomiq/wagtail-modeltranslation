@@ -1,46 +1,33 @@
-form .l10n-hidden {
+@media screen and (max-width:70em) {
+  div.locale-picker {
     display: none;
+  }
+  
 }
+@media screen and (min-width:70em) {
+  div.locale-picker ul {
+    display: inline-flex;
+    list-style-type: none;
 
-div.locale-picker {
-  display: block;
-  text-align: right;
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-}
+    li {
+      text-align: center;
+      text-transform: uppercase;
+      label.button {
+        opacity: 0.5;
+        font-weight: bold;
+        display: inline;
+        padding: .5em .5em;
+        margin: 0em .2em;
+      }
 
-form > div.locale-picker {
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
+      label.button:has(input[type="checkbox"]:not(disabled):checked) {
+        opacity: 1.0;
+      }
 
-div.locale-picker h2 {
-  display: inline;
-}
-
-div.locale-picker ul.locales {
-  display: inline-block;
-  margin: auto 1em;
-}
-
-div.locale-picker ul.locales li.locale {
-  display: inline;
-  margin: auto 0.5em;
-}
-
-div.locale-picker ul.locales li.locale button.locale-toggle {
-  background-color: rgba(57, 151, 150, 0.3);
-  text-transform: uppercase;
-  outline: none;
-  border: none;
-  font-weight: 700;
-  font-size: 1.2em;
-  text-decoration: none;
-  color: #fff;
-  padding: .25em;
-  max-height: 2em;
-}
-
-div.locale-picker ul.locales li.locale button.locale-toggle.showing-locale {
-  background-color: #43b1b0;
+      input { display: none }
+    }
+  }
+  .w-form-width section:has(span.w-required-mark) {
+    display: block;
+  }
 }

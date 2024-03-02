@@ -4,11 +4,10 @@ from urllib.parse import unquote
 from django import template
 from django.urls import resolve
 from django.urls.exceptions import Resolver404
-from django.utils.translation import activate, get_language
+from django.utils.translation import activate, get_language, get_language_info
 from django.utils.safestring import SafeString
 from modeltranslation import settings as mt_settings
 from modeltranslation.settings import DEFAULT_LANGUAGE
-from modeltranslation.utils import build_localized_verbose_name
 from six import iteritems
 from wagtail.models import Page
 from wagtail.templatetags.wagtailcore_tags import pageurl
@@ -112,9 +111,15 @@ def do_get_available_languages(unused_parser, token):
     return GetAvailableLanguagesNode(args[2])
 
 @register.simple_tag(takes_context=False)
-def lang_toggles():
-    res = '<ul>'
+def lang_toggle_editor():
+    """ Inserts language toggles in the page editor """
+    res = "<div class='locale-picker'> <ul>"
     for lang in mt_settings.AVAILABLE_LANGUAGES:
-        res += f"<li>{build_localized_verbose_name('', lang)}</li>"
+        info = get_language_info(lang)
+        res += "<li><label class='button'>"
+        res += f"<input type='checkbox' name='sw' id='{lang}_checkbox' checked='true' />"
+        res += f"{info.get('name_local', lang)}"
+        res += f"</label></li>"
+    res += "</ul></div>"
 
     return SafeString(res)
