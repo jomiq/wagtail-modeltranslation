@@ -8,6 +8,7 @@ from django.utils.translation import activate, get_language, get_language_info
 from django.utils.safestring import SafeString
 from modeltranslation import settings as mt_settings
 from modeltranslation.settings import DEFAULT_LANGUAGE
+from modeltranslation.utils import fallbacks
 from six import iteritems
 from wagtail.models import Page
 from wagtail.templatetags.wagtailcore_tags import pageurl
@@ -123,3 +124,11 @@ def lang_toggle_editor():
     res += "</ul></div>"
 
     return SafeString(res)
+
+@register.simple_tag(takes_context=True)
+def is_fallback(context, item):
+    """ Check if item is translated or if a fallback value is used.
+        Useful for displaying 'translation is missing!' type messages """  
+
+    with fallbacks(False):
+        return not bool(getattr(context.get("page"), item))
