@@ -3,12 +3,14 @@ from urllib.parse import unquote
 
 from django import template
 from django.urls import resolve
+from django.template import Context
 from django.urls.exceptions import Resolver404
 from django.utils.translation import activate, get_language, get_language_info
 from django.utils.safestring import SafeString
 from modeltranslation import settings as mt_settings
 from modeltranslation.settings import DEFAULT_LANGUAGE
 from modeltranslation.utils import fallbacks
+from modeltranslation.manager import get_translatable_fields_for_model
 from six import iteritems
 from wagtail.models import Page
 from wagtail.templatetags.wagtailcore_tags import pageurl
@@ -126,9 +128,33 @@ def lang_toggle_editor():
     return SafeString(res)
 
 @register.simple_tag(takes_context=True)
-def is_fallback(context, item):
+def is_fallback(context: Context, field_name: str) -> bool:
     """ Check if item is translated or if a fallback value is used.
-        Useful for displaying 'translation is missing!' type messages """  
-
+        Useful for displaying 'translation is missing!' type messages 
+        Use: 
+            {% if is_fallback "title" %} The title is a lie ...   
+    """  
     with fallbacks(False):
-        return not bool(getattr(context.get("page"), item))
+        return not bool(getattr(context.get("page"), field_name))
+    
+
+@register.simple_tag(takes_context=True)
+def is_fully_translated(context: Context, ignore_fields=["seo_title", "search_description"], skip_empty=True) -> bool:
+    """ Check if all translated fields are populated for the current language.
+        Defaults:
+            Ignore the non-user-facing fields: seo_title, search_description
+            Do not check fields that are not populated
+    """
+    
+    if get_language() != mt_settings.DEFAULT_LANGUAGE:
+        fields = [f for f in get_translatable_fields_for_model(context.get("page").__class__) 
+                if f not in ignore_fields]
+        if skip_empty:
+            fields = [f for f in fields if bool(getattr(context.get("page"), f))]
+
+        with fallbacks(False):
+            for field in fields:
+                if not bool(getattr(context.get("page"), field)):
+                    return False
+    
+    return True
