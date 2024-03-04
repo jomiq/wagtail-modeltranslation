@@ -7,14 +7,13 @@ from django.http import HttpResponse, QueryDict
 from django.shortcuts import redirect, render
 
 from django.templatetags.static import static
-from django.template import Context
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 from six import iteritems
 
-from modeltranslation.utils import get_language_info
+from modeltranslation.utils import get_language_info, build_localized_fieldname
 from modeltranslation import settings as mt_settings
 from wagtail_modeltranslation import settings as wmt_settings
 
