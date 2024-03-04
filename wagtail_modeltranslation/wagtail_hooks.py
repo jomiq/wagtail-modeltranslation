@@ -113,7 +113,7 @@ def modeltranslation_page_editor_css():
             if isinstance(wmt_settings.PALETTE, list):
                 c = wmt_settings.PALETTE[i % len(wmt_settings.PALETTE)]
             lang["background_color"] = f"hsl({c[0]} {c[1]} {c[2]})"
-            lang["border_color"] = f"hsl({c[0]} {c[1]} {0.5*c[2]})"
+            lang["border_color"] = f"hsl({c[0]} {c[1]} {0.8*c[2]})"
             
 
     return render_to_string(
