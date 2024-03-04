@@ -7,12 +7,14 @@ from django.http import HttpResponse, QueryDict
 from django.shortcuts import redirect, render
 
 from django.templatetags.static import static
-from django.utils.html import escape, format_html_join
+from django.template import Context
+from django.template.loader import render_to_string
+from django.utils.html import escape
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 from six import iteritems
 
-from modeltranslation.utils import build_localized_fieldname
+from modeltranslation.utils import get_language_info
 from modeltranslation import settings as mt_settings
 from wagtail_modeltranslation import settings as wmt_settings
 
@@ -97,32 +99,31 @@ def copy_streamfields_content():
 
 @hooks.register(_HOOK_INSERT_CSS)
 def modeltranslation_page_editor_css():
-    filenames = [
-        "wagtail_modeltranslation/css/admin_patch.css",
-        "wagtail_modeltranslation/css/language_toggles.css",
-        "wagtail_modeltranslation/css/fancy_icons.css",
+    includes = [
+        static(f)
+        for f in [
+            "wagtail_modeltranslation/css/admin_patch.css",
+            "wagtail_modeltranslation/css/language_toggles.css",
+            "wagtail_modeltranslation/css/fancy_icons.css",
+        ]
     ]
+    lang_infos = [get_language_info(lang) for lang in mt_settings.AVAILABLE_LANGUAGES]
+    if wmt_settings.PALETTE:
+        c = wmt_settings.PALETTE
+        for i, lang in enumerate(lang_infos):
+            if isinstance(wmt_settings.PALETTE, list):
+                c = wmt_settings.PALETTE[i % len(wmt_settings.PALETTE)]
+            lang["background_color"] = f"hsl({c[0]} {c[1]} {c[2]})"
+            lang["border_color"] = f"hsl({c[0]} {c[1]} {0.5*c[2]})"
+            
 
-    languages = mt_settings.AVAILABLE_LANGUAGES
-
-    html = format_html_join(
-        "", '<link rel="stylesheet" href="{}" />', ((static(f),) for f in filenames)
+    return render_to_string(
+        "modeltranslation_editor_inline.html",
+        context={
+            "includes": includes,
+            "lang_infos": lang_infos,
+        },
     )
-
-    html += "<style>@media screen and (min-width:70em) { "
-    html += format_html_join(
-        ", ", '.content * [lang="{}"]', ((lang,) for lang in languages)
-    )
-    html += "{ display: none; } "
-    html += format_html_join(
-        ", ",
-        ':has(#{}_checkbox:checked) .content * [lang="{}"]',
-        ((lang, lang) for lang in languages),
-    )
-    html += "{ display: block; } }"
-    html += "</style>"
-
-    return html
 
 
 @hooks.register("register_rich_text_link_handler")

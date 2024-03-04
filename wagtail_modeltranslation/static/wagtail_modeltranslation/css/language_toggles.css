@@ -31,3 +31,13 @@
     display: block;
   }
 }
+
+.content section label:after{ 
+  vertical-align: super;
+  text-transform: uppercase;
+  margin-inline: .5rem;
+  padding: 0 0.2rem;
+  border-radius: 2px;
+  font-size: .7rem;
+  font-weight: bold;
+}

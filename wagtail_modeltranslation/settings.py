@@ -3,6 +3,8 @@ from django.conf import settings
 
 from wagtail_modeltranslation.utils import import_from_string
 
+
+
 # TODO: Consider making panel validation using class name to avoid the import_from_string method
 
 # Load allowed CUSTOM_PANELS from Django settings
@@ -16,6 +18,13 @@ TRANSLATE_SLUGS = getattr(settings, 'WAGTAILMODELTRANSLATION_TRANSLATE_SLUGS', T
 LOCALE_PICKER = getattr(settings, 'WAGTAILMODELTRANSLATION_LOCALE_PICKER', True)
 LOCALE_PICKER_DEFAULT = getattr(settings, 'WAGTAILMODELTRANSLATION_LOCALE_PICKER_DEFAULT', None)
 LOCALE_PICKER_RESTORE = getattr(settings, 'WAGTAILMODELTRANSLATION_LOCALE_PICKER_RESTORE', False)
+PALETTE = getattr(settings, "WAGTAILMODELTRANSLATION_PALETTE", None)
+if PALETTE == True:
+    from wagtail_modeltranslation.utils import default_palette_hsl as PALETTE
+
+
+
+
 
 LOCALE_PATHS = [os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "locale")]
 print(f"locale: {LOCALE_PATHS}")
