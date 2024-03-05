@@ -113,19 +113,21 @@ def do_get_available_languages(unused_parser, token):
             "(got %r)" % args)
     return GetAvailableLanguagesNode(args[2])
 
-@register.simple_tag(takes_context=False)
-def lang_toggle_editor():
+@register.simple_tag(takes_context=True)
+def lang_toggle_editor(context: Context):
     """ Inserts language toggles in the page editor """
-    res = "<div class='locale-picker'> <ul>"
-    for lang in mt_settings.AVAILABLE_LANGUAGES:
-        info = get_language_info(lang)
-        res += "<li><label class='button'>"
-        res += f"<input type='checkbox' name='sw' id='{lang}_checkbox' checked='true' />"
-        res += f"{info.get('name_local', lang)}"
-        res += f"</label></li>"
-    res += "</ul></div>"
+    is_editor = "/edit.html" in context.template_name or "/create.html" in context.template_name
+    if is_editor:    
+        res = "<div class='locale-picker'> <ul>"
+        for lang in mt_settings.AVAILABLE_LANGUAGES:
+            info = get_language_info(lang)
+            res += "<li><label class='button'>"
+            res += f"<input type='checkbox' name='sw' id='{lang}_checkbox' checked='true' />"
+            res += f"{info.get('name_local', lang)}"
+            res += f"</label></li>"
+        res += "</ul></div>"
 
-    return SafeString(res)
+        return SafeString(res)
 
 @register.simple_tag(takes_context=True)
 def is_fallback(context: Context, field_name: str) -> bool:
