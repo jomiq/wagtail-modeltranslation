@@ -102,7 +102,6 @@ def modeltranslation_page_editor_css():
         static(f)
         for f in [
             "wagtail_modeltranslation/css/admin_patch.css",
-            "wagtail_modeltranslation/css/language_toggles.css",
             "wagtail_modeltranslation/css/fancy_icons.css",
         ]
     ]

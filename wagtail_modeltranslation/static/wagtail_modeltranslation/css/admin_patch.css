@@ -6,10 +6,66 @@
         border-style: none none solid none;
         padding: 0;
     }
+
     :first-child .w-field {
         display: grid;
     }
+
     :first-child .w-field__help {
         order: 2;
     }
+}
+
+@media screen and (max-width:70em) {
+    div.locale-picker {
+        display: none;
+    }
+
+}
+
+@media screen and (min-width:70em) {
+    div.locale-picker ul {
+        display: inline-flex;
+        list-style-type: none;
+
+        li {
+            text-align: center;
+            text-transform: uppercase;
+
+            label.button {
+                opacity: 0.5;
+                font-weight: bold;
+                display: inline;
+                padding: .5em .5em;
+                margin: 0em .2em;
+            }
+
+            label.button:has(input[type="checkbox"]:not(disabled):checked) {
+                opacity: 1.0;
+            }
+
+            label.button:hover {
+                opacity: 0.75;
+            }
+
+            input {
+                display: none
+            }
+        }
+    }
+
+    .w-form-width section:has(span.w-required-mark) {
+        display: block;
+    }
+}
+
+.content label:after {
+    vertical-align: super;
+    color: white;
+    text-transform: uppercase;
+    margin-inline: .5rem;
+    padding: 0 0.2rem;
+    border-radius: 2px;
+    font-size: .7rem;
+    font-weight: bold;
 }
