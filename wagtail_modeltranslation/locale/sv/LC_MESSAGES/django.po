@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-20 14:06-0600\n"
+"POT-Creation-Date: 2024-03-05 09:33-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: wagtail_modeltranslation/patch_wagtailadmin.py:375
+#: wagtail_modeltranslation/patch_wagtailadmin.py:438
 #: wagtail_modeltranslation/patch_wagtailadmin_forms.py:160
 msgid "This slug is already in use"
 msgstr "Denna slug används redan"
@@ -106,16 +106,12 @@ msgstr ""
 msgid "Wagtail tests"
 msgstr ""
 
-#: wagtail_modeltranslation/wagtail_hooks.py:64
-msgid "Languages: "
-msgstr "Språk:"
-
-#: wagtail_modeltranslation/wagtail_hooks.py:268
+#: wagtail_modeltranslation/wagtail_hooks.py:204
 #, python-brace-format
 msgid "Page '{0}' and {1} subpages copied."
 msgstr ""
 
-#: wagtail_modeltranslation/wagtail_hooks.py:272
+#: wagtail_modeltranslation/wagtail_hooks.py:212
 #, python-brace-format
 msgid "Page '{0}' copied."
 msgstr ""

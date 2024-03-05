@@ -1,23 +1,10 @@
 #!/usr/bin/env python
 import os
-import sys
 import argparse 
-
 import django
-from django.core.management import execute_from_command_line
 from django.core.management import call_command
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'wagtail_modeltranslation.settings'
-
-
-def migrate():
-    django.setup()
-    call_command('makemigrations', 'tests', verbosity=2, interactive=False)
-
-
-def run(argv):
-    argv = [sys.argv[0], 'test', 'wagtail_modeltranslation']
-    execute_from_command_line(argv)
 
 
 if __name__ == '__main__':
@@ -33,9 +20,15 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
+        "--clean",
+        action="store_true",
+        help="Do not include obsolete messages",
+    )
+
+    parser.add_argument(
         "--compile",
         action="store_true",
-        help="Compile translation messages",
+        help="Compile translation files",
     )
     
     parser.add_argument(
@@ -50,8 +43,12 @@ if __name__ == '__main__':
         parser.print_help()
         exit()
     
+    django.setup()
     if args.make:
-        call_command("makemessages", locale=args.locale)
+        extra_args = {"verbosity": 2}
+        if args.clean:
+            extra_args["no_obsolete"] = True
+        call_command("makemessages", locale=args.locale, **extra_args )
     
     if args.compile:
         call_command("compilemessages", locale=args.locale)
