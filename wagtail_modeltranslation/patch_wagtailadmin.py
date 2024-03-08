@@ -156,18 +156,24 @@ class WagtailTranslator(object):
         elif hasattr(model, "panels"):
             model.panels = self._patch_panels(model.panels)
         else:
+            # this part is for when model.panel = None. 
+            # By default all fields are provided, so we need to remove 
+            # the translation fields before adding them back with _patch_***_panels()
             panels = extract_panel_definitions_from_model_class(model)
             translation_registered_fields = translator.get_options_for_model(
                 model
             ).fields
-            panels = list(
-                filter(
-                    lambda field: field.field_name not in translation_registered_fields,
-                    panels,
-                )
-            )
-            panel = ObjectList(panels)
-            model.edit_handler = panel.bind_to_model(model=model)
+            existing_translation_fields = [
+                build_localized_fieldname(field, lang)
+                for lang in mt_settings.AVAILABLE_LANGUAGES
+                for field in translation_registered_fields
+            ]
+            model.panels = []
+            for panel in panels:
+                if panel.field_name in translation_registered_fields:
+                    model.panels += self._patch_panels([panel])
+                elif panel.field_name not in existing_translation_fields:
+                    model.panels.append(panel)
 
     def _patch_panels(self, panels_list, related_model=None):
         """
