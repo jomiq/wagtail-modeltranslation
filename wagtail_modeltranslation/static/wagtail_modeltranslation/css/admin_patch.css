@@ -60,7 +60,7 @@
   }
 }
 
-.locale-picker-checkbox {
+input.locale-picker-checkbox {
   display: none;
 }
 
