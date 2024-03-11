@@ -122,7 +122,7 @@ def lang_toggle_editor(context: Context):
         for lang in mt_settings.AVAILABLE_LANGUAGES:
             info = get_language_info(lang)
             res += "<li><label class='button'>"
-            res += f"<input type='checkbox' name='sw' id='{lang}_checkbox' checked='true' />"
+            res += f"<input class='locale-picker-checkbox' type='checkbox' name='sw' id='{lang}_checkbox' checked='true' />"
             res += f"{info.get('name_local', lang)}"
             res += f"</label></li>"
         res += "</ul></div>"

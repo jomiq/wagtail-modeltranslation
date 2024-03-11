@@ -52,16 +52,16 @@
       label.button:hover {
         opacity: 0.75;
       }
-
-      input {
-        display: none
-      }
     }
   }
 
   .w-form-width section:has(span.w-required-mark) {
     display: block;
   }
+}
+
+.locale-picker-checkbox {
+  display: none;
 }
 
 .w-panel__header:after,
