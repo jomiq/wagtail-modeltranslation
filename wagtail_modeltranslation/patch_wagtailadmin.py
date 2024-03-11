@@ -11,6 +11,9 @@ from django.http import Http404
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import trans_real
+
+from modelcluster.fields import ChildObjectsDescriptor, ReverseManyToOneDescriptor
+
 from modeltranslation import settings as mt_settings
 from modeltranslation.translator import NotRegistered, translator
 from modeltranslation.utils import build_localized_fieldname, get_language
@@ -293,8 +296,11 @@ class WagtailTranslator(object):
         # get the model relation through the panel relation_name which is the
         # inline model related_name
         relation = getattr(model, panel.relation_name)
-
-        related_model = relation.rel.related_model
+        related_model = None
+        if isinstance(relation, (ChildObjectsDescriptor, ReverseManyToOneDescriptor)):
+            related_model = relation.rel.related_model
+        else:
+            related_model = relation.related.related_model
 
         # If the related model is not registered for translation there is nothing
         # for us to do
