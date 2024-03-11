@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 
 from django.templatetags.static import static
 from django.template.loader import render_to_string
-from django.utils.html import escape
+from django.utils.html import escape, format_html_join
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 from six import iteritems
@@ -83,6 +83,12 @@ def return_translation_target_field_rendered_html(request, page_id):
     return HttpResponse(
         json.dumps(target_field_content_html), content_type="application/json"
     )
+
+@hooks.register("insert_global_admin_js")
+def locale_switcher_js():
+    files = ["wagtail_modeltranslation/js/language_toggles.js",
+             "wagtail_modeltranslation/js/js.cookie.js"]
+    return format_html_join("\n", "<script src='{}' />", ((static(f),) for f in files))
 
 
 @hooks.register("register_admin_urls")
