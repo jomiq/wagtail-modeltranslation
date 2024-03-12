@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 
 from django.templatetags.static import static
 from django.template.loader import render_to_string
-from django.utils.html import escape, format_html_join
+from django.utils.html import escape, format_html, format_html_join
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 from six import iteritems
@@ -84,11 +84,26 @@ def return_translation_target_field_rendered_html(request, page_id):
         json.dumps(target_field_content_html), content_type="application/json"
     )
 
+
 @hooks.register("insert_global_admin_js")
 def locale_switcher_js():
-    files = ["wagtail_modeltranslation/js/language_toggles.js",
-             "wagtail_modeltranslation/js/js.cookie.js"]
-    return format_html_join("\n", "<script src='{}' />", ((static(f),) for f in files))
+    module_files = []
+    files = [
+        "wagtail_modeltranslation/js/language_toggles.js",
+        #"wagtail_modeltranslation/js/js_cookie.js",
+    ]
+    res = (
+        format_html_join(
+            "\n",
+            "<script type='module' src='{}'></script>",
+            ((static(f),) for f in module_files),
+        )
+        + "\n"
+    )
+    res += format_html_join(
+        "\n", "<script src='{}'></script>", ((static(f),) for f in files)
+    )
+    return res
 
 
 @hooks.register("register_admin_urls")
@@ -119,7 +134,6 @@ def modeltranslation_page_editor_css():
                 c = wmt_settings.PALETTE[i % len(wmt_settings.PALETTE)]
             lang["background_color"] = f"hsl({c[0]} {c[1]} {c[2]})"
             lang["border_color"] = f"hsl({c[0]} {c[1]} {0.8*c[2]})"
-            
 
     return render_to_string(
         "modeltranslation_editor_inline.html",
