@@ -115,7 +115,8 @@ def do_get_available_languages(unused_parser, token):
 
 @register.simple_tag(takes_context=True)
 def lang_toggle_editor(context: Context):
-    """ Inserts language toggles in the page editor """
+    """ Inserts language toggles in the page editor 
+        This uses some css to hide/show fields based on their lang attribute. """
     is_editor = "/edit.html" in context.template_name or "/create.html" in context.template_name
     if is_editor:    
         res = "<div class='locale-picker'> <ul>"
