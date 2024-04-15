@@ -29,6 +29,10 @@
 }
 
 @media screen and (min-width:70em) {
+  
+  .content [lang]:not(.w-required-mark)
+  { display: none; }
+
   div.locale-picker ul {
     display: inline-flex;
     list-style-type: none;
@@ -53,10 +57,6 @@
         opacity: 0.75;
       }
     }
-  }
-
-  .w-form-width section:has(span.w-required-mark) {
-    display: block;
   }
 }
 
