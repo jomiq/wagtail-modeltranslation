@@ -37,7 +37,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.8"
 Django = ">= 3.2"
-wagtail = ">=4.0"
+wagtail = ">=4.0,<=6.2"
 django-modeltranslation = { git = "https://github.com/jomiq/django-modeltranslation.git", branch = "dss-version" }
 
 [tool.poetry.dev-dependencies]
