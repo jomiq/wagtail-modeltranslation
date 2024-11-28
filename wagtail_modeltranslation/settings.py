@@ -19,7 +19,7 @@ LOCALE_PICKER = getattr(settings, 'WAGTAILMODELTRANSLATION_LOCALE_PICKER', True)
 LOCALE_PICKER_DEFAULT = getattr(settings, 'WAGTAILMODELTRANSLATION_LOCALE_PICKER_DEFAULT', None)
 LOCALE_PICKER_RESTORE = getattr(settings, 'WAGTAILMODELTRANSLATION_LOCALE_PICKER_RESTORE', False)
 PALETTE = getattr(settings, "WAGTAILMODELTRANSLATION_PALETTE", None)
-if PALETTE == True:
+if PALETTE:
     from wagtail_modeltranslation.utils import default_palette_hsl as PALETTE
 
 
@@ -27,4 +27,3 @@ if PALETTE == True:
 
 
 LOCALE_PATHS = [os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "locale")]
-print(f"locale: {LOCALE_PATHS}")
