@@ -3,10 +3,14 @@ from urllib.parse import unquote
 
 from django import template
 from django.urls import resolve
+from django.template import Context
 from django.urls.exceptions import Resolver404
-from django.utils.translation import activate, get_language
+from django.utils.translation import activate, get_language, get_language_info
+from django.utils.safestring import SafeString
 from modeltranslation import settings as mt_settings
 from modeltranslation.settings import DEFAULT_LANGUAGE
+from modeltranslation.utils import fallbacks
+from modeltranslation.manager import get_translatable_fields_for_model
 from six import iteritems
 from wagtail.models import Page
 from wagtail.templatetags.wagtailcore_tags import pageurl
@@ -111,3 +115,52 @@ def do_get_available_languages(unused_parser, token):
             "'get_available_languages_wmt' requires 'as variable' " "(got %r)" % args
         )
     return GetAvailableLanguagesNode(args[2])
+
+@register.simple_tag(takes_context=True)
+def lang_toggle_editor(context: Context):
+    """ Inserts language toggles in the page editor 
+        This uses some css to hide/show fields based on their lang attribute. """
+    is_editor = "/edit.html" in context.template_name or "/create.html" in context.template_name
+    if is_editor:    
+        res = "<div class='locale-picker'> <ul>"
+        for lang in mt_settings.AVAILABLE_LANGUAGES:
+            info = get_language_info(lang)
+            res += "<li><label class='button'>"
+            res += f"<input class='locale-picker-checkbox' type='checkbox' name='sw' id='{lang}_checkbox' checked='true' />"
+            res += f"{info.get('name_local', lang)}"
+            res += f"</label></li>"
+        res += "</ul></div>"
+
+        return SafeString(res)
+
+@register.simple_tag(takes_context=True)
+def is_fallback(context: Context, field_name: str) -> bool:
+    """ Check if item is translated or if a fallback value is used.
+        Useful for displaying 'translation is missing!' type messages 
+        Use: 
+            {% if is_fallback "title" %} The title is a lie ...   
+    """  
+    with fallbacks(False):
+        return not bool(getattr(context.get("page"), field_name))
+    
+
+@register.simple_tag(takes_context=True)
+def is_fully_translated(context: Context, ignore_fields=["seo_title", "search_description"], skip_empty=True) -> bool:
+    """ Check if all translated fields are populated for the current language.
+        Defaults:
+            Ignore the non-user-facing fields: seo_title, search_description
+            Do not check fields that are not populated
+    """
+    
+    if get_language() != mt_settings.DEFAULT_LANGUAGE:
+        fields = [f for f in get_translatable_fields_for_model(context.get("page").__class__) 
+                if f not in ignore_fields]
+        if skip_empty:
+            fields = [f for f in fields if bool(getattr(context.get("page"), f))]
+
+        with fallbacks(False):
+            for field in fields:
+                if not bool(getattr(context.get("page"), field)):
+                    return False
+    
+    return True

@@ -1,40 +1,76 @@
-/* Wagtail 4 hides title headers by default, this style restores them */
+.w-panel.wmt-title {
+  input {
+    font-size: 2.5rem;
+    font-weight: bold;
+    border-radius: 0;
+    border-style: none none solid none;
+    padding: 0;
 
-.w-panel.title:first-child .w-panel__header,
-.w-panel.title:nth-child(2) .w-panel__header {
-    position: static;
-    width: fit-content;
-    height: fit-content;
-    margin-inline-start: -4.5rem;
-    margin-bottom: .75rem;
+  }
+
+  input::focus-visible {
+    border-style: none none solid none;
+  }
+
+  :first-child .w-field {
+    display: grid;
+  }
+
+  :first-child .w-field__help {
+    order: 2;
+  }
 }
 
-.w-panel.title:first-child .w-panel__header .w-panel__anchor--prefix,
-.w-panel.title:first-child .w-panel__header .w-panel__toggle,
-.w-panel.title:nth-child(2) .w-panel__header .w-panel__anchor--prefix,
-.w-panel.title:nth-child(2) .w-panel__header .w-panel__toggle {
-    display: inline-grid;
+@media screen and (max-width:70em) {
+  div.locale-picker {
+    display: none;
+  }
+
 }
-.w-panel.title .Draftail-Editor .public-DraftEditor-content,
-.w-panel.title input,
-.w-panel.title textarea,
-.w-panel.title .Draftail-Editor .public-DraftEditor-content,
-.w-panel.title input,
-.w-panel.title textarea {
-    color:var(--w-color-primary);
-    color:var(--w-color-grey-600);
-    color:var(--w-color-text-context);
-    font-size:1.875rem;
-    font-weight:800;
-    line-height:1.3;
-    margin-inline-start:-.375rem;
-    padding-inline-start:.375rem;
+
+@media screen and (min-width:70em) {
+  
+  .content [lang]:not(.w-required-mark)
+  { display: none; }
+
+  div.locale-picker ul {
+    display: inline-flex;
+    list-style-type: none;
+
+    li {
+      text-align: center;
+      text-transform: uppercase;
+
+      label.button {
+        opacity: 0.5;
+        font-weight: bold;
+        display: inline;
+        padding: .5em .5em;
+        margin: 0em .2em;
+      }
+
+      label.button:has(input[type="checkbox"]:not(disabled):checked) {
+        opacity: 1.0;
+      }
+
+      label.button:hover {
+        opacity: 0.75;
+      }
+    }
+  }
 }
-.w-panel.title .Draftail-Editor .public-DraftEditor-content:not(:hover, :focus, [aria-invalid=true]),
-.w-panel.title input:not(:hover, :focus, [aria-invalid=true]),
-.w-panel.title textarea:not(:hover, :focus, [aria-invalid=true]),
-.w-panel.title .Draftail-Editor .public-DraftEditor-content:not(:hover, :focus, [aria-invalid=true]),
-.w-panel.title input:not(:hover, :focus, [aria-invalid=true]),
-.w-panel.title textarea:not(:hover, :focus, [aria-invalid=true]) {
-    border-color:#0000
+
+input.locale-picker-checkbox {
+  display: none;
+}
+
+.w-panel__header:after,
+.w-field__label:after {
+  color: white;
+  text-transform: uppercase;
+  padding: 0 0.4rem;
+  border-radius: 2px;
+  font-size: .7rem;
+  font-weight: bold;
+  float: right;
 }

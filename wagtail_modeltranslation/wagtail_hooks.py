@@ -5,13 +5,15 @@ from django.urls import re_path
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, QueryDict
 from django.shortcuts import redirect, render
+
 from django.templatetags.static import static
+from django.template.loader import render_to_string
 from django.utils.html import escape, format_html, format_html_join
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 from six import iteritems
 
-from modeltranslation.utils import build_localized_fieldname
+from modeltranslation.utils import get_language_info, build_localized_fieldname
 from modeltranslation import settings as mt_settings
 from wagtail_modeltranslation import settings as wmt_settings
 
@@ -96,6 +98,7 @@ if wmt_settings.LOCALE_PICKER:
         return js_includes + css_includes
 
 
+
 ###############################################################################
 # Copy StreamFields content
 ###############################################################################
@@ -112,6 +115,7 @@ def return_translation_target_field_rendered_html(request, page_id):
         origin_field_name = request.POST.get('origin_field_name')
         target_field_name = request.POST.get('target_field_name')
         origin_field_serialized = json.loads(request.POST.get('serializedOriginField'))
+
 
         # Patch field prefixes from origin field to target field
         target_field_patched = []
@@ -195,6 +199,7 @@ def modeltranslation_page_editor_titles_css():
 
     filename = "wagtail_modeltranslation/css/admin_patch.css"
     return format_html('<link rel="stylesheet" href="{}">', static(filename))
+
 
 
 @hooks.register("register_rich_text_link_handler")

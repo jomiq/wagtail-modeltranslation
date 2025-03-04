@@ -1,0 +1,7 @@
+{% extends "wagtailadmin/shared/headers/slim_header.html"%}
+{% load wagtail_modeltranslation %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% lang_toggle_editor %} 
+{% endblock %}
