@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wagtail-modeltranslation"
-version = "0.14.1"
+version = "0.15.2"
 license = "New BSD"
 authors = ["InfoPortugal S.A. <suporte24@infoportugal.pt>"]
 maintainers = ["InfoPortugal S.A. <suporte24@infoportugal.pt>"]
@@ -23,10 +23,10 @@ include = [
 exclude = ["*.pyc", "*.DS_Store"]
 classifiers = [
   'Programming Language :: Python :: 3',
-  'Programming Language :: Python :: 3.8',
   'Programming Language :: Python :: 3.9',
   'Programming Language :: Python :: 3.10',
   'Programming Language :: Python :: 3.11',
+  'Programming Language :: Python :: 3.12',
   'Operating System :: OS Independent',
   'Environment :: Web Environment',
   'Intended Audience :: Developers',
@@ -35,9 +35,10 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-Django = ">= 3.2"
-wagtail = ">=4.0,<=6.2"
+
+python = "^3.9"
+Django = ">=4.2"
+wagtail = ">=5.2,<=7.0"
 django-modeltranslation = { git = "https://github.com/jomiq/django-modeltranslation.git", branch = "dss-version" }
 
 [tool.poetry.dev-dependencies]

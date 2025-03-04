@@ -28,6 +28,7 @@ function readCookie() {
     return res ? res : Object();
 }
 
+
 function setCookie(value) {
     console.log("setCookie:", value);
     localStorage.setItem("wagtail_modeltranslation_toggles", JSON.stringify(value));

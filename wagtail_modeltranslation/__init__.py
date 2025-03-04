@@ -1,2 +1,2 @@
-__version__ = '0.14.1-dss'
-default_app_config = 'wagtail_modeltranslation.apps.WagtailModeltranslationConfig'
+__version__ = "0.15.2-dss"
+default_app_config = "wagtail_modeltranslation.apps.WagtailModeltranslationConfig"

@@ -33,6 +33,72 @@ else:
     _HOOK_INSERT_CSS = "insert_editor_css"
 
 
+@hooks.register("insert_editor_js")
+def translation_settings():
+    lang_codes = []
+    for lang in settings.LANGUAGES:
+        lang_codes.append("'%s'" % lang[0])
+
+    if wmt_settings.LOCALE_PICKER_DEFAULT is not None:
+        locale_picker_default = ", ".join(
+            f"'{v}'" for v in wmt_settings.LOCALE_PICKER_DEFAULT
+        )
+    else:
+        locale_picker_default = f"'{mt_settings.DEFAULT_LANGUAGE}'"
+
+    js_languages = """
+    <script>
+        wagtailModelTranslations = {{
+            languages: [{languages}],
+            defaultLanguage: '{language_code}',
+            viewEditString: '{view_edit_string}',
+            translate_slugs: {translate_slugs},
+            locale_picker_default: [{locale_picker_default}],
+            locale_picker_restore: {locale_picker_restore}
+        }};
+    </script>
+    """.format(
+        languages=", ".join(lang_codes),
+        language_code=mt_settings.DEFAULT_LANGUAGE,
+        view_edit_string=_("View / edit fields for"),
+        translate_slugs="true" if wmt_settings.TRANSLATE_SLUGS else "false",
+        locale_picker_default=locale_picker_default,
+        locale_picker_restore="true" if wmt_settings.LOCALE_PICKER_RESTORE else "false",
+    )
+
+    return js_languages
+
+
+if wmt_settings.LOCALE_PICKER:
+
+    @hooks.register("insert_editor_js")
+    def language_toggles():
+        """
+        On any admin page, try to load the l10n code that aggregates
+        fieldsets per locale, then gives it a button that you can
+        click to show/hide all those fields.
+        """
+
+        js_files = ["wagtail_modeltranslation/js/language_toggles.js"]
+
+        js_includes = format_html_join(
+            "\n",
+            '<script src="{0}"></script>',
+            ((static(filename),) for filename in js_files),
+        )
+
+        css_files = ["wagtail_modeltranslation/css/language_toggles.css"]
+
+        css_includes = format_html_join(
+            "\n",
+            '<link rel="stylesheet" href="{0}">',
+            ((static(filename),) for filename in css_files),
+        )
+
+        return js_includes + css_includes
+
+
+
 ###############################################################################
 # Copy StreamFields content
 ###############################################################################
@@ -45,10 +111,11 @@ def return_translation_target_field_rendered_html(request, page_id):
 
     page = Page.objects.get(pk=page_id)
 
-    if request.is_ajax():
-        origin_field_name = request.POST.get("origin_field_name")
-        target_field_name = request.POST.get("target_field_name")
-        origin_field_serialized = json.loads(request.POST.get("serializedOriginField"))
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        origin_field_name = request.POST.get('origin_field_name')
+        target_field_name = request.POST.get('target_field_name')
+        origin_field_serialized = json.loads(request.POST.get('serializedOriginField'))
+
 
         # Patch field prefixes from origin field to target field
         target_field_patched = []
@@ -85,27 +152,6 @@ def return_translation_target_field_rendered_html(request, page_id):
     )
 
 
-@hooks.register("insert_global_admin_js")
-def locale_switcher_js():
-    module_files = []
-    files = [
-        "wagtail_modeltranslation/js/language_toggles.js",
-        #"wagtail_modeltranslation/js/js_cookie.js",
-    ]
-    res = (
-        format_html_join(
-            "\n",
-            "<script type='module' src='{}'></script>",
-            ((static(f),) for f in module_files),
-        )
-        + "\n"
-    )
-    res += format_html_join(
-        "\n", "<script src='{}'></script>", ((static(f),) for f in files)
-    )
-    return res
-
-
 @hooks.register("register_admin_urls")
 def copy_streamfields_content():
     return [
@@ -117,31 +163,43 @@ def copy_streamfields_content():
     ]
 
 
+@hooks.register("insert_editor_js")
+def streamfields_translation_copy():
+    """
+    Includes script in editor html file that creates
+    buttons to copy content between translated stream fields
+    and send a ajax request to copy the content.
+    """
+
+    # includes the javascript file in the html file
+    js_files = [
+        "wagtail_modeltranslation/js/js.cookie.js",
+        "wagtail_modeltranslation/js/copy_stream_fields.js",
+    ]
+
+    js_includes = format_html_join(
+        "\n",
+        '<script src="{0}"></script>',
+        ((static(filename),) for filename in js_files),
+    )
+    return js_includes
+
+
 @hooks.register(_HOOK_INSERT_CSS)
 def modeltranslation_page_editor_css():
-    includes = [
-        static(f)
-        for f in [
-            "wagtail_modeltranslation/css/admin_patch.css",
-            "wagtail_modeltranslation/css/fancy_icons.css",
-        ]
-    ]
-    lang_infos = [get_language_info(lang) for lang in mt_settings.AVAILABLE_LANGUAGES]
-    if wmt_settings.PALETTE:
-        c = wmt_settings.PALETTE
-        for i, lang in enumerate(lang_infos):
-            if isinstance(wmt_settings.PALETTE, list):
-                c = wmt_settings.PALETTE[i % len(wmt_settings.PALETTE)]
-            lang["background_color"] = f"hsl({c[0]} {c[1]} {c[2]})"
-            lang["border_color"] = f"hsl({c[0]} {c[1]} {0.8*c[2]})"
+    filename = "wagtail_modeltranslation/css/page_editor_modeltranslation.css"
+    return format_html('<link rel="stylesheet" href="{}">', static(filename))
 
-    return render_to_string(
-        "modeltranslation_editor_inline.html",
-        context={
-            "includes": includes,
-            "lang_infos": lang_infos,
-        },
-    )
+
+@hooks.register(_HOOK_INSERT_CSS)
+def modeltranslation_page_editor_titles_css():
+    """
+    Patch admin styles, in particular page title headings missing in Wagtail 4
+    """
+
+    filename = "wagtail_modeltranslation/css/admin_patch.css"
+    return format_html('<link rel="stylesheet" href="{}">', static(filename))
+
 
 
 @hooks.register("register_rich_text_link_handler")
