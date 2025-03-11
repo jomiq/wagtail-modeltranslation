@@ -11,9 +11,6 @@ from django.http import Http404
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import trans_real
-
-from modelcluster.fields import ChildObjectsDescriptor, ReverseManyToOneDescriptor
-
 from modeltranslation import settings as mt_settings
 from modeltranslation.translator import NotRegistered, translator
 from modeltranslation.utils import build_localized_fieldname, get_language
@@ -47,7 +44,7 @@ try:
 
     SIMPLE_PANEL_CLASSES = [FieldPanel, TitleFieldPanel]
 except ImportError:
-    TitleFieldPanel = PatchedTitleFieldPanel = None
+    TitleFieldPanel = None
     SIMPLE_PANEL_CLASSES = [FieldPanel]
 
 SIMPLE_PANEL_CLASSES += CUSTOM_SIMPLE_PANELS
@@ -150,7 +147,6 @@ class WagtailTranslator(object):
     def _patch_other_models(self, model):
         # PATCH FIELDS
         self._patch_fields(model)
-
         if hasattr(model, "edit_handler"):
             edit_handler = model.edit_handler
             for tab in edit_handler.children:
@@ -167,9 +163,6 @@ class WagtailTranslator(object):
                     tab.children = self._patch_panels(tab.children)
                 model.snippet_viewset.edit_handler = edit_handler.bind_to_model(model)
         else:
-            # this part is for when model.panel = None. 
-            # By default all fields are provided, so we need to remove 
-            # the translation fields before adding them back with _patch_***_panels()
             panels = extract_panel_definitions_from_model_class(model)
             edit_handler = self._patch_ObjectList(panels, model)
             model.edit_handler = edit_handler.bind_to_model(model=model)
@@ -185,7 +178,6 @@ class WagtailTranslator(object):
             )
         )
         return ObjectList(panels)
-
 
     def _patch_panels(self, panels_list, related_model=None):
         """
@@ -245,7 +237,7 @@ class WagtailTranslator(object):
                 if TRANSLATE_SLUGS:
                     # When a title field is changed its corresponding localized slug may need to
                     # be updated.
-                    localized_panel = PatchedTitleFieldPanel(
+                    localized_panel = panel_class(
                         localized_field_name,
                         targets=[
                             build_localized_fieldname(target, language)
@@ -256,11 +248,10 @@ class WagtailTranslator(object):
                 elif language == mt_settings.DEFAULT_LANGUAGE:
                     # Slugs are not translated, so when a title field in the default language is
                     # updated we must update the slug it is linked to.
-                    localized_panel = PatchedTitleFieldPanel(
+                    localized_panel = panel_class(
                         localized_field_name,
                         targets=original_panel.targets,
                         apply_if_live=original_panel.apply_if_live,
-
                     )
                 else:
                     # Slugs are not translated and this title field is in a non-default language.
@@ -268,12 +259,9 @@ class WagtailTranslator(object):
                     # plain FieldPanel.
                     localized_panel = FieldPanel(
                         localized_field_name, classname="title"
-
                     )
             else:
-                localized_panel = panel_class(
-                    localized_field_name, attrs={"lang": language}
-                )
+                localized_panel = panel_class(localized_field_name)
 
             # Pass the original panel extra attributes to the localized
             if hasattr(original_panel, "classname"):
@@ -305,11 +293,8 @@ class WagtailTranslator(object):
         # get the model relation through the panel relation_name which is the
         # inline model related_name
         relation = getattr(model, panel.relation_name)
-        related_model = None
-        if isinstance(relation, (ChildObjectsDescriptor, ReverseManyToOneDescriptor)):
-            related_model = relation.rel.related_model
-        else:
-            related_model = relation.related.related_model
+
+        related_model = relation.rel.related_model
 
         # If the related model is not registered for translation there is nothing
         # for us to do
@@ -323,7 +308,6 @@ class WagtailTranslator(object):
                 translation_registered_fields = translator.get_options_for_model(
                     related_model
                 ).all_fields
-
                 panels = list(
                     filter(
                         lambda field: field.field_name
@@ -491,7 +475,6 @@ def _localized_update_descendant_url_paths(
     localized_url_path = "url_path"
     if language:
         localized_url_path = build_localized_fieldname("url_path", language)
-
     old_url_path_len = len(old_url_path)
     descendants = Page.objects.rewrite(False).filter(path__startswith=page.path).exclude(
         **{localized_url_path: None}).exclude(pk=page.pk)
@@ -505,7 +488,6 @@ def _localized_update_descendant_url_paths(
 
     # Update all descendants in a single query
     Page.objects.bulk_update(update_descendants, [localized_url_path])
-
 
 
 def _localized_site_get_site_root_paths():

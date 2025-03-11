@@ -1,7 +1,0 @@
-div.locale-picker ul li label.button::before {
-    content: url("data:image/svg+xml,{{ no_view }}");
-    margin-inline-end: 0.5rem;
-} 
-div.locale-picker ul li label.button:has(input[type="checkbox"]:not(disabled):checked)::before { 
-    content: url("data:image/svg+xml,{{ view }}");
-}
